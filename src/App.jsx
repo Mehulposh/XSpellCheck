@@ -1,35 +1,61 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React, { useState, useEffect } from "react";
 
-function App() {
-  const [count, setCount] = useState(0)
+// Custom dictionary for spell-checking
+const customDictionary = {
+  teh: "the",
+  wrok: "work",
+  fot: "for",
+  exampl: "example",
+};
+
+
+function App(){
+  const [text,setText] = useState('');
+  const [suggestedText, setSuggestedText] = useState('');
+
+  const spellcheck = (input) => {
+    const words = input.split(' ');
+
+    for (let word of words){
+      const lowerCaseword = word.toLowerCase();
+      if(customDictionary[lowerCaseword]){
+        return `Did you mean: ${customDictionary[lowerCaseword]}`;
+      }
+    }
+
+    return '';
+  };
+
+
+  useEffect(() => {
+    if(text.trim() === ''){
+      setSuggestedText('');
+    }
+    else{
+      const availableSuggestion = spellcheck(text);
+      setSuggestedText(availableSuggestion);
+    }
+  },[text]);
+
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <div>
+      <h1>Spell Check and Auto-Correction</h1>
+
+      <textarea 
+        value={text}
+        onChange={(e) => setText(e.target.value)}
+        placeholder="Enter text..."
+        rows={10}
+        cols={50}
+      />
+
+      {suggestedText && <p>{suggestedText}</p>}
+    </div>
   )
+
+
 }
 
-export default App
+
+export default App;
