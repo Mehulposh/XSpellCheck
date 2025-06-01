@@ -19,7 +19,7 @@ function App(){
     for (let word of words){
       const lowerCaseword = word.toLowerCase();
       if(customDictionary[lowerCaseword]){
-        return `Did you mean: ${customDictionary[lowerCaseword]}`;
+        return `Did you mean: ${customDictionary[lowerCaseword]}?`;
       }
     }
 
